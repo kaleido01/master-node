@@ -1,14 +1,12 @@
 const express = require("express");
-
+const path = require("path");
 const router = express.Router();
 
 // /admin/add-product =>get
 router.get("/add-product", (req, res, next) => {
 	console.log("in the another");
 	//自動でheaderが付加される
-	res.send(
-		"<form action='/admin/product' method='POST'><input type='text'name='title' ><button type='submit'>add product</button></input></form>"
-	);
+	res.sendFile(path.join(__dirname, "../", "views", "add-product.html"));
 });
 // /admin/add-product =>post
 
