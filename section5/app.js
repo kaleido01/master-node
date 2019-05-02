@@ -10,6 +10,9 @@ app.use((req, res, next) => {
 });
 app.use((req, res, next) => {
 	console.log("in the another middleware");
+
+	//自動でheaderが付加される
+	res.send("<h1>hhhhhhhhaaaaaaaaiiiii</h1>");
 });
 
 const server = http.createServer(app);
