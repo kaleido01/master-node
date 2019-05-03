@@ -36,6 +36,7 @@ exports.postAddProduct = (req, res, next) => {
 	product.save();
 	res.redirect("/");
 };
+exports.postEditProduct = (req, res, next) => {};
 
 exports.getProducts = (req, res, next) => {
 	Product.fetchAll(products => {
