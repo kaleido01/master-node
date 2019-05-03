@@ -9,10 +9,14 @@ const router = express.Router();
 const adminData = require("./admin");
 
 router.get("/", (req, res, next) => {
-	console.log(adminData.products);
+	products = adminData.products;
 	res.render("shop", {
 		pageTitle: "shop",
-		prods: adminData.products
+		prods: products,
+		path: "/",
+		hasProducts: products.length > 0,
+		activeShop: true,
+		productCSS: true
 	});
 });
 

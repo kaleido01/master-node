@@ -12,7 +12,7 @@ const products = [];
 router.get("/add-product", (req, res, next) => {
 	res.render("add-product", {
 		prods: products,
-		pageTitle: "Shop",
+		pageTitle: "add products",
 		path: "/",
 		hasProducts: products.length > 0,
 		activeShop: true,
