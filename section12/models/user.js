@@ -1,11 +1,13 @@
 const getDb = require("../util/database").getDb;
 const mongodb = require("mongodb");
 
+const ObjectId = mongodb.ObjectId;
+
 class User {
 	constructor(name, email, cart, id) {
 		this.name = name;
 		this.email = email;
-		this.cart = cart; // {items:[]}
+		this.cart = cart ? cart : (cart = { items: [] }); // {items:[]}
 		this._id = id;
 	}
 
@@ -24,11 +26,33 @@ class User {
 	}
 
 	addToCart(product) {
-		const updatedCart = { items: [{ ...product, quantity: 1 }] };
+		const cartProductIndex = this.cart.items.findIndex(cp => {
+			return cp.productId.toString() === product._id.toString();
+		});
+
+		let newQuantity = 1;
+		let updatedCartItems = [...this.cart.items];
+
+		if (cartProductIndex !== -1) {
+			//既にその商品はかごの中なので量を一つ増やす
+			newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+			updatedCartItems[cartProductIndex].quantity = newQuantity;
+		} else {
+			updatedCartItems.push({
+				productId: new ObjectId(product._id),
+				quantity: newQuantity
+			});
+		}
+		const updatedCart = {
+			items: updatedCartItems
+		};
 		const db = getDb();
 		return db
 			.collection("users")
-			.updateOne({ _id: new ObjectId(this._id) }, $set({ cart: updatedCart }));
+			.updateOne(
+				{ _id: new ObjectId(this._id) },
+				{ $set: { cart: updatedCart } }
+			);
 	}
 
 	static fetchAll() {
@@ -50,7 +74,7 @@ class User {
 		const db = getDb();
 		return db
 			.collection("users")
-			.find({ _id: new mongodb.ObjectId(prodId) })
+			.find({ _id: new ObjectId(prodId) })
 			.next();
 	}
 }
