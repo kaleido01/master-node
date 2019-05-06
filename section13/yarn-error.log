@@ -1,0 +1,52 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js
+
+PATH: 
+  C:\Program Files (x86)\Windows Resource Kits\Tools\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\w32tex\bin;C:\Program Files (x86)\gs\gs9.22\bin;C:\Program Files (x86)\gs\gs9.22\lib;C:\WINDOWS\System32\OpenSSH\;C:\Users\oxdor\Anaconda3\;C:\Users\oxdor\Anaconda3\Scripts\;C:\Program Files\nodejs\;C:\mysql\bin;C:\Program Files\MongoDB\Server\4.0\bin;C:\Go\bin;C:\Program Files\Git\cmd;C:\sqlite;C:\TDM-GCC-64\bin;C:\Program Files (x86)\Yarn\bin\;C:\Users\oxdor\AppData\Local\Yarn\bin
+
+Yarn version: 
+  1.15.2
+
+Node version: 
+  10.15.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'C:\Users\oxdor\AppData\Local\Yarn\Cache\v4\npm-sequelize-5.8.5-3bb63b5e5b65eedc46d57fc69bb251b8af1bd73a\node_modules\sequelize\.yarn-tarball.tgz'
+
+npm manifest: 
+  {
+    "name": "nodejs-complete-guide",
+    "version": "1.0.0",
+    "description": "Complete Node.js Guide",
+    "main": "app.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "nodemon app.js",
+      "start-server": "node app.js"
+    },
+    "author": "Maximilian Schwarzmüller",
+    "license": "ISC",
+    "devDependencies": {
+      "nodemon": "^1.18.3"
+    },
+    "dependencies": {
+      "body-parser": "^1.18.3",
+      "ejs": "^2.6.1",
+      "express": "^4.16.3",
+      "express-handlebars": "^3.0.0",
+      "mongodb": "^3.1.6",
+      "mongoose": "^5.2.17",
+      "mysql2": "^1.6.1",
+      "pug": "^2.0.3",
+      "sequelize": "^5.0.0-beta.11"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
