@@ -48,7 +48,6 @@ exports.getCart = (req, res, next) => {
 		.populate("cart.items.productId")
 		.execPopulate()
 		.then(user => {
-			console.log(user.cart.items[0].productId.title);
 			const products = user.cart.items;
 			res.render("shop/cart", {
 				path: "/cart",
@@ -99,6 +98,9 @@ exports.postOrder = (req, res, next) => {
 				products
 			});
 			return order.save();
+		})
+		.then(result => {
+			return req.user.clearCart();
 		})
 		.then(result => {
 			res.redirect("/orders");
