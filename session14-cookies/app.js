@@ -24,7 +24,7 @@ app.use(
 );
 
 app.use((req, res, next) => {
-	User.findById("5bab316ce0a7c75f783cb8a8")
+	User.findById("5cd01f12c52df546fc32a8d0")
 		.then(user => {
 			req.user = user;
 			next();
@@ -40,21 +40,20 @@ app.use(errorController.get404);
 
 mongoose
 	.connect(
-		'"mongodb+srv://kaleido:kaleido@cluster0-y0a8x.mongodb.net/shop?retryWrites=true"'
+		"mongodb+srv://kaleido:kaleido@cluster0-y0a8x.mongodb.net/shop?retryWrites=true"
 	)
 	.then(result => {
 		User.findOne().then(user => {
 			if (!user) {
 				const user = new User({
-					name: "Max",
-					email: "max@test.com",
-					cart: {
-						items: []
-					}
+					name: "pikumin",
+					email: "pikumin@gmail.com",
+					cart: { items: [] }
 				});
 				user.save();
 			}
 		});
+
 		app.listen(3000);
 	})
 	.catch(err => {
