@@ -8,9 +8,7 @@ const session = require("express-session");
 const errorController = require("./controllers/error");
 const User = require("./models/user");
 
-const app = express(
-	session({ secret: "mySecret", resave: false, saveUninitialized: false })
-);
+const app = express();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -21,7 +19,9 @@ const authRoutes = require("./routes/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(sess);
+app.use(
+	session({ secret: "mySecret", resave: false, saveUninitialized: false })
+);
 
 app.use((req, res, next) => {
 	User.findById("5bab316ce0a7c75f783cb8a8")
