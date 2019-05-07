@@ -25,7 +25,7 @@ class Feed extends Component {
 		fetch("URL")
 			.then(res => {
 				if (res.status !== 200) {
-					throw new Error("Failed to fetch user status ghghgh.");
+					throw new Error("Failed to fetch user status.");
 				}
 				return res.json();
 			})
@@ -53,7 +53,7 @@ class Feed extends Component {
 		fetch("http://localhost:8080/feed/posts")
 			.then(res => {
 				if (res.status !== 200) {
-					throw new Error("Failed to fetch postswhy?.");
+					throw new Error("Failed to fetch posts.");
 				}
 				console.log("hhaaii");
 				return res.json();
