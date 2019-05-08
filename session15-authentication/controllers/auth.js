@@ -39,19 +39,21 @@ exports.postSignup = (req, res, next) => {
 			}
 
 			//非同期処理
-			return bcrypt.hash(password, 12);
+			return bcrypt
+				.hash(password, 12)
+				.then(hashedPassword => {
+					const user = new User({
+						email,
+						password: hashedPassword,
+						cart: { items: [] }
+					});
+					return user.save();
+				})
+				.then(result => {
+					res.redirect("/login");
+				});
 		})
-		.then(hashedPassword => {
-			const user = new User({
-				email,
-				password: hashedPassword,
-				cart: { items: [] }
-			});
-			return user.save();
-		})
-		.then(result => {
-			res.redirect("/login");
-		})
+
 		.catch(err => {
 			console.log(err);
 		});
