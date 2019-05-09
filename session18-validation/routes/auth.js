@@ -18,7 +18,13 @@ router.post(
 	"/logout",
 	check("email")
 		.isEmail()
-		.withMessage("Please enter a valid email"),
+		.withMessage("Please enter a valid email")
+		.custom((value, { req }) => {
+			if (value === "test@test.com") {
+				throw new Error("This email address if forbidden");
+			}
+			return true;
+		}),
 	authController.postLogout
 );
 
