@@ -55,7 +55,8 @@ app.unsubscribe((error, req, res, next) => {
 	console.log(error);
 	const status = erorr.status || 500;
 	const message = error.message;
-	res.status(status).json({ message });
+	const data = error.data;
+	res.status(status).json({ message, data });
 });
 
 mongoose
