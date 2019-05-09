@@ -31,6 +31,12 @@ router.post(
 	)
 		.isLength({ min: 5 })
 		.isAlphanumeric(),
+	body("confirmPassword").custom((value, { req }) => {
+		if (value !== req.body.passward) {
+			throw new Error("Password have to match");
+		}
+		return true;
+	}),
 	authController.postLogout
 );
 
