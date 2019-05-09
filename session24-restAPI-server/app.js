@@ -1,9 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const mongoose = require("mongoose");
 const feedRoutes = require("./routes/feed");
 
 const app = express();
+
+MONGODB_URI =
+	"mongodb+srv://kaleido:kaleido@cluster0-y0a8x.mongodb.net/shop?retryWrites=true";
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
@@ -19,5 +22,14 @@ app.use((req, res, next) => {
 });
 
 app.use("/feed", feedRoutes);
+
+mongoose
+	.connect(MONGODB_URI)
+	.then(result => {
+		app.listen(3000);
+	})
+	.catch(err => {
+		console.log(err);
+	});
 
 app.listen(8080);
