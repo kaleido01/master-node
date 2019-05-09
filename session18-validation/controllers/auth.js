@@ -40,7 +40,8 @@ exports.getSignup = (req, res, next) => {
 		path: "/signup",
 		pageTitle: "Signup",
 		errorMessage: message,
-		oldInput: { email: "", password: "", confirmPassword: "" }
+		oldInput: { email: "", password: "", confirmPassword: "" },
+		validationErrors: []
 	});
 };
 
@@ -89,13 +90,15 @@ exports.postSignup = (req, res, next) => {
 	const password = req.body.password;
 	const confirmPassword = req.body.confirmPassword;
 	const errors = validationResult(req);
+	console.log(errors.array());
 
 	if (!errors.isEmpty()) {
 		return res.status(422).render("auth/signup", {
 			path: "/signup",
 			pageTitle: "Signup",
 			errorMessage: errors.array()[0].msg,
-			oldInput: { email, password, confirmPassword }
+			oldInput: { email, password, confirmPassword },
+			validationErrors: errors.array()
 		});
 	}
 
