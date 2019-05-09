@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { check } = require("express-validator/check");
+const { check, body } = require("express-validator/check");
 
 const authController = require("../controllers/auth");
 
@@ -25,6 +25,12 @@ router.post(
 			}
 			return true;
 		}),
+	body(
+		"password",
+		"Please enter a password with only numbers and text and at least 5 charactors"
+	)
+		.isLength({ min: 5 })
+		.isAlphanumeric(),
 	authController.postLogout
 );
 
