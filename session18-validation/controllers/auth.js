@@ -84,7 +84,7 @@ exports.postSignup = (req, res, next) => {
 		return res.status(422).res.render("auth/signup", {
 			path: "/signup",
 			pageTitle: "Signup",
-			errorMessage: errors.array()
+			errorMessage: errors.array()[0].msg
 		});
 	}
 
