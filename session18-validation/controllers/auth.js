@@ -90,7 +90,6 @@ exports.postSignup = (req, res, next) => {
 	const password = req.body.password;
 	const confirmPassword = req.body.confirmPassword;
 	const errors = validationResult(req);
-	console.log(errors.array());
 
 	if (!errors.isEmpty()) {
 		return res.status(422).render("auth/signup", {
