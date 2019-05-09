@@ -6,7 +6,7 @@ const feedRoutes = require("./routes/feed");
 const app = express();
 
 MONGODB_URI =
-	"mongodb+srv://kaleido:kaleido@cluster0-y0a8x.mongodb.net/shop?retryWrites=true";
+	"mongodb+srv://kaleido:kaleido@cluster0-y0a8x.mongodb.net/message?retryWrites=true";
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
