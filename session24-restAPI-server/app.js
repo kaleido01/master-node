@@ -51,9 +51,9 @@ app.use((req, res, next) => {
 app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
 
-app.unsubscribe((error, req, res, next) => {
+app.use((error, req, res, next) => {
 	console.log(error);
-	const status = erorr.status || 500;
+	const status = error.status || 500;
 	const message = error.message;
 	const data = error.data;
 	res.status(status).json({ message, data });
