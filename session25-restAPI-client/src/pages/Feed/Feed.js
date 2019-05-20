@@ -211,8 +211,8 @@ class Feed extends Component {
 							p => p._id === prevState.editPost._id
 						);
 						updatedPosts[postIndex] = post;
-					} else if (prevState.posts.length < 2) {
-						updatedPosts = prevState.posts.concat(post);
+					} else {
+						updatedPosts.unshift(post);
 					}
 					return {
 						posts: updatedPosts,
