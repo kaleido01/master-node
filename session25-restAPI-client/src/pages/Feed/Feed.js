@@ -23,7 +23,6 @@ class Feed extends Component {
 
 	componentDidMount() {
 		fetch("http://localhost:8080/auth/status", {
-			method: "POST",
 			headers: {
 				Authorization: "Bearer " + this.props.token
 			}
@@ -55,25 +54,24 @@ class Feed extends Component {
 			page--;
 			this.setState({ postPage: page });
 		}
-
 		const graphqlQuery = {
 			query: `
-    {posts(page:${page}){
-        posts{
-          _id
-          title
-          content
-          imageUrl
-          creator{
-            name
+        {
+          posts(page: ${page}) {
+            posts {
+              _id
+              title
+              content
+              creator {
+                name
+              }
+              createdAt
+            }
+            totalPosts
           }
-          createdAt
         }
-        totalPosts
-      }}
       `
 		};
-
 		fetch("http://localhost:8080/graphql", {
 			method: "POST",
 			headers: {
@@ -87,7 +85,7 @@ class Feed extends Component {
 			})
 			.then(resData => {
 				if (resData.errors) {
-					throw new Error("Fetching posts failed");
+					throw new Error("Fetching posts failed!");
 				}
 				this.setState({
 					posts: resData.data.posts.posts.map(post => {
@@ -111,7 +109,9 @@ class Feed extends Component {
 				Authorization: "Bearer " + this.props.token,
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({ status: this.state.status })
+			body: JSON.stringify({
+				status: this.state.status
+			})
 		})
 			.then(res => {
 				if (res.status !== 200 && res.status !== 201) {
@@ -150,17 +150,9 @@ class Feed extends Component {
 		});
 		const formData = new FormData();
 		formData.append("image", postData.image);
-
-		// let url = "http://localhost:8080/feed/post";
-		// let method = "POST";
-		// if (this.state.editPost) {
-		// 	url = `http://localhost:8080/feed/post/${this.state.editPost._id}`;
-		// 	method = "PUT";
-		// }
 		if (this.state.editPost) {
 			formData.append("oldPath", this.state.editPost.imagePath);
 		}
-
 		fetch("http://localhost:8080/post-image", {
 			method: "PUT",
 			headers: {
@@ -168,48 +160,49 @@ class Feed extends Component {
 			},
 			body: formData
 		})
-			.then(res => {
-				return res.json();
-			})
+			.then(res => res.json())
 			.then(fileResData => {
-				const imageUrl = fileResData.filePath;
+				let imageUrl = fileResData.filePath;
+				imageUrl = `images/${[...imageUrl].slice(7, imageUrl.length).join("")}`;
 				let graphqlQuery = {
 					query: `
-          mutation{
-            createPost(postInput:{title:"${postData.title}",content:"${
+          mutation {
+            createPost(postInput: {title: "${postData.title}", content: "${
 						postData.content
-					}",imageUrl:"${imageUrl}"}){
+					}", imageUrl: "${imageUrl}"}) {
               _id
               title
               content
               imageUrl
-              creator{
+              creator {
                 name
               }
               createdAt
             }
           }
-          `
+        `
 				};
+
 				return fetch("http://localhost:8080/graphql", {
 					method: "POST",
+					body: JSON.stringify(graphqlQuery),
 					headers: {
 						Authorization: "Bearer " + this.props.token,
 						"Content-Type": "application/json"
-					},
-					body: JSON.stringify(graphqlQuery)
+					}
 				});
 			})
 			.then(res => {
 				return res.json();
 			})
 			.then(resData => {
-				console.log(resData);
 				if (resData.errors && resData.errors[0].status === 422) {
-					throw new Error("validation failed. ");
+					throw new Error(
+						"Validation failed. Make sure the email address isn't used yet!"
+					);
 				}
 				if (resData.errors) {
-					throw new Error("Authenticate failed");
+					throw new Error("User login failed!");
 				}
 				console.log(resData);
 				const post = {
@@ -218,7 +211,7 @@ class Feed extends Component {
 					content: resData.data.createPost.content,
 					creator: resData.data.createPost.creator,
 					createdAt: resData.data.createPost.createdAt,
-					imagePath: resData.data.createPost.imagePath
+					imagePath: resData.data.createPost.imageUrl
 				};
 				this.setState(prevState => {
 					let updatedPosts = [...prevState.posts];
@@ -256,7 +249,7 @@ class Feed extends Component {
 
 	deletePostHandler = postId => {
 		this.setState({ postsLoading: true });
-		fetch(`http://localhost:8080/feed/post/${postId}`, {
+		fetch("http://localhost:8080/feed/post/" + postId, {
 			method: "DELETE",
 			headers: {
 				Authorization: "Bearer " + this.props.token
@@ -270,10 +263,11 @@ class Feed extends Component {
 			})
 			.then(resData => {
 				console.log(resData);
-				this.setState(prevState => {
-					const updatedPosts = prevState.posts.filter(p => p._id !== postId);
-					return { posts: updatedPosts, postsLoading: false };
-				});
+				this.loadPosts();
+				// this.setState(prevState => {
+				//   const updatedPosts = prevState.posts.filter(p => p._id !== postId);
+				//   return { posts: updatedPosts, postsLoading: false };
+				// });
 			})
 			.catch(err => {
 				console.log(err);

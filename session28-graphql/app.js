@@ -16,7 +16,6 @@ const app = express();
 
 MONGODB_URI =
 	"mongodb+srv://kaleido:kaleido@cluster0-y0a8x.mongodb.net/message?retryWrites=true";
-
 const fileStorage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, "images");
@@ -55,6 +54,8 @@ app.use((req, res, next) => {
 	next();
 });
 
+app.use(auth);
+
 app.put("/post-image", (req, res, next) => {
 	if (!req.isAuth) {
 		throw new Error("Not authenticated");
@@ -66,12 +67,11 @@ app.put("/post-image", (req, res, next) => {
 	if (req.body.oldPath) {
 		clearImage(req.body.oldPath);
 	}
+	console.log(req.body);
 	return res
 		.status(201)
 		.json({ message: "File stored", filePath: req.file.path });
 });
-
-app.use(auth);
 
 app.use(
 	"/graphql",
