@@ -66,6 +66,7 @@ module.exports = {
 	},
 	createPost: async function({ postInput }, req) {
 		const errors = [];
+
 		if (!req.isAuth) {
 			const error = new Error("Not authenticated!");
 			error.code = 401;
@@ -89,8 +90,9 @@ module.exports = {
 			error.code = 422;
 			throw error;
 		}
+		console.log(req.isAuth);
 
-		const user = await User.findeById(req.userId);
+		const user = await User.findById(req.userId);
 
 		if (errors.length > 0) {
 			const error = new Error("Invalid user");
@@ -108,6 +110,8 @@ module.exports = {
 		const createdPost = await post.save();
 
 		user.posts.push(createdPost);
+
+		await user.save();
 		return {
 			...createdPost._doc,
 			_id: createdPost._id.toString(),
