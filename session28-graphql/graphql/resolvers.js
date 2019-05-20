@@ -160,5 +160,82 @@ module.exports = {
 			createdAt: post.createdAt.toISOString(),
 			updatedAt: post.updatedAt.toISOString()
 		};
+	},
+	updatePost: async function({ id, postInput }, req) {
+		if (!req.isAuth) {
+			const error = new Error("Not authenticated!");
+			error.code = 401;
+			throw error;
+		}
+		const post = await Post.findById(id).populate("creator");
+
+		if (post.creator._id.toString() !== req.userId.toString()) {
+			const error = new Error("Not authorized!");
+			error.code = 403;
+			throw error;
+		}
+		post.title = postInput.title;
+		post.content = postInput.content;
+		if (postInput.imageUrl !== "undefined") {
+			post.imageUrl = postInput.imageUrl;
+		}
+
+		const updatedPost = await post.save();
+		return {
+			...updatedPost._doc,
+			_id: post._id.toString(),
+			createdAt: post.createdAt.toISOString(),
+			updatedAt: post.updatedAt.toISOString()
+		};
+	},
+	deletePost: async function({ id }, req) {
+		if (!req.isAuth) {
+			const error = new Error("Not authenticated!");
+			error.code = 401;
+			throw error;
+		}
+		const post = await Post.findById(id);
+
+		if (post.creator.toString() !== req.userId.toString()) {
+			const error = new Error("Not authorized!");
+			error.code = 403;
+			throw error;
+		}
+		await Post.findByIdAndDelete(id);
+		const user = await User.findById(req.userId);
+		user.posts.pull(id);
+		await user.save();
+		return true;
+	},
+	user: async function(args, req) {
+		if (!req.isAuth) {
+			const error = new Error("Not authenticated!");
+			error.code = 401;
+			throw error;
+		}
+		const user = await User.findById(req.userId);
+		if (!user) {
+			const error = new Error("No user found");
+			error.code = 404;
+			throw error;
+		}
+		return { ...user._doc, _id: user._id.toString() };
+	},
+	updateStatus: async function({ status }, req) {
+		if (!req.isAuth) {
+			const error = new Error("Not authenticated!");
+			error.code = 401;
+			throw error;
+		}
+		const user = await User.findById(req.userId);
+		if (!user) {
+			const error = new Error("No user found");
+			error.code = 404;
+			throw error;
+		}
+		console.log(status);
+		user.status = status;
+		await user.save();
+		return { ...user._doc, _id: user._id.toString() };
 	}
 };
